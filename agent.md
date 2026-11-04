@@ -7,24 +7,25 @@ This project implements a decentralized **Swarm Topology** using **LangGraph**, 
 In conventional multi-agent setups, a centralized supervisor or manager acts as a bottleneck, inspecting every message and directing traffic. In contrast, this **Swarm Architecture** operates through autonomous peer-to-peer deliberations: each banking specialist agent possesses dedicated domain tools, queries a vector knowledge base for regulatory SOPs, executes core actions, and hands off the conversation to the most qualified peer agent until the incident is fully resolved.
 
 ```mermaid
-flowchart LR
+flowchart TD
     Start([Incoming Incident Alert]) --> Triage[Alex: Triage & Service]
+    Triage -->|Peer Handoff| Fraud[Sam: Fraud & Security]
     
-    subgraph SwarmTopology ["Decentralized Banking Swarm"]
-        direction TB
-        Triage <-->|Peer Handoff| Fraud[Sam: Fraud & Security]
-        Fraud <-->|Peer Handoff| Credit[Morgan: Credit & Underwriting]
-        Credit <-->|Peer Handoff| Compliance[Jordan: AML & Compliance]
-        Compliance <-->|Peer Handoff| Settlement[Taylor: Settlement & Operations]
-    end
+    Fraud --> HITL{"🚨 HITL Gate<br/>Customer Real-Time Verification"}
+    
+    HITL -->|Confirm Fraud| Credit[Morgan: Credit & Underwriting]
+    Credit --> Compliance[Jordan: AML & Compliance]
+    Compliance --> Settlement[Taylor: Settlement & Operations]
+    Settlement --> ResolvedFraud([Consensus: Fraud Contained & Restitution Complete])
+
+    HITL -->|Approve Legitimate| FalseAlarm[Alex: Customer Closure]
+    FalseAlarm --> ResolvedLegit([Consensus: False Alarm Cleared & Card Kept Active])
 
     ChromaDB[(ChromaDB Vector Store<br/>Regulations, Policies & SOPs)] -.->|RAG Retrieval| Triage
     ChromaDB -.->|RAG Retrieval| Fraud
     ChromaDB -.->|RAG Retrieval| Credit
     ChromaDB -.->|RAG Retrieval| Compliance
     ChromaDB -.->|RAG Retrieval| Settlement
-
-    Settlement --> Resolved([Consensus Reached & Resolved])
 ```
 
 ---

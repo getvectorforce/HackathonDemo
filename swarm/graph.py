@@ -1,15 +1,16 @@
-"""LangGraph Swarm Topology for 5 Banking Agents.
+"""LangGraph Swarm Topology for 5 Banking Agents with HITL Support.
 
-Implements decentralized peer-to-peer handoffs between:
+Implements decentralized peer-to-peer handoffs and Human-in-the-Loop checkpointing between:
 1. Customer Triage (Alex)
-2. Fraud & Security (Sam)
+2. Fraud & Security (Sam) - Includes HITL Customer Verification Gate
 3. Loan & Credit Underwriting (Morgan)
 4. Compliance & AML (Jordan)
 5. Core Settlement & Operations (Taylor)
 """
 
-from typing import Literal
+from typing import Optional, Any
 from langgraph.graph import StateGraph, START, END
+from langgraph.checkpoint.memory import MemorySaver
 from agents.state import SwarmState
 from agents.triage import triage_agent_node
 from agents.fraud import fraud_agent_node
@@ -26,8 +27,8 @@ def route_swarm(state: SwarmState) -> str:
     return active
 
 
-def build_banking_swarm_graph():
-    """Constructs and compiles the LangGraph Swarm state machine."""
+def build_banking_swarm_graph(checkpointer: Optional[Any] = None, enable_checkpoint: bool = True):
+    """Constructs and compiles the LangGraph Swarm state machine with HITL support."""
     workflow = StateGraph(SwarmState)
 
     # 1. Register the 5 Agent Nodes
@@ -56,5 +57,5 @@ def build_banking_swarm_graph():
             routing_map
         )
 
-    return workflow.compile()
-
+    cp = checkpointer if checkpointer is not None else (MemorySaver() if enable_checkpoint else None)
+    return workflow.compile(checkpointer=cp)

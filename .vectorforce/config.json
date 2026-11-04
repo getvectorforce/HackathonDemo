@@ -1,0 +1,6 @@
+{
+  "VF_LLM_PROVIDER": "muse",
+  "MODEL_API_KEY": "LLM_2399170877557750_qcdDba3FDL6U2VctGlBHe3eyWeE",
+  "VF_MUSE_MODEL": "muse-spark-1.3",
+  "VF_MUSE_BASE_URL": "https://api.meta.ai/v1"
+}

@@ -1,4 +1,4 @@
-"""State schema for the 5-Agent Banking Swarm topology."""
+"""State schema for the 5-Agent Banking Swarm topology with HITL support."""
 
 from typing import TypedDict, List, Dict, Any, Optional
 from langchain_core.messages import BaseMessage
@@ -37,3 +37,7 @@ class SwarmState(TypedDict, total=False):
     resolution_summary: Optional[str]
     is_resolved: bool
 
+    # Human-in-the-Loop (HITL) fields
+    customer_verification_status: Optional[str]  # "PENDING", "CONFIRMED_FRAUD", "LEGITIMATE_PURCHASE"
+    customer_feedback_note: Optional[str]
+    is_false_alarm: Optional[bool]

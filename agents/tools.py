@@ -21,6 +21,19 @@ def tool_freeze_card(card_last_four: str, reason: str) -> Dict[str, Any]:
     }
 
 
+def tool_log_travel_exception(customer_id: str, country: str, days: int = 7) -> Dict[str, Any]:
+    """Tool: Human-in-the-Loop verified travel note logged in fraud switch to whitelist authorized transactions."""
+    return {
+        "status": "SUCCESS",
+        "action": "TRAVEL_EXCEPTION_LOGGED",
+        "customer_id": customer_id,
+        "destination_country": country,
+        "valid_days": days,
+        "bypass_geo_velocity": True,
+        "risk_recalibrated": "LOW_VERIFIED"
+    }
+
+
 def tool_protect_loan_debit(customer_id: str, loan_id: str, amount: float, hold_days: int = 14) -> Dict[str, Any]:
     """Tool: Freezes auto-debit and suppresses negative credit reporting."""
     return {
@@ -74,4 +87,3 @@ def tool_issue_virtual_card(customer_id: str) -> Dict[str, Any]:
         "channel": "MOBILE_WALLET_PUSH",
         "status": "ACTIVE_FOR_USE"
     }
-

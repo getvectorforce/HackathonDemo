@@ -1,6 +1,7 @@
-"""Unit and integration tests for the LangGraph Banking Swarm."""
+"""Unit and integration tests for the LangGraph Banking Swarm with HITL."""
 
 import unittest
+from langgraph.types import Command
 from swarm.graph import build_banking_swarm_graph
 from agents.state import SwarmState, IncidentData
 from rag.vector_store import get_banking_vector_store, retrieve_banking_knowledge
@@ -30,8 +31,8 @@ class TestBankingSwarm(unittest.TestCase):
         self.assertIsNotNone(result)
         self.assertIn("Regulation E", result)
 
-    def test_swarm_execution_flow(self):
-        """Verify all 5 banking agents participate and achieve resolution."""
+    def test_swarm_hitl_branch_confirm_fraud(self):
+        """Verify HITL flow when customer confirms unauthorized fraud."""
         initial_state: SwarmState = {
             "messages": [],
             "active_agent": "triage_agent",
@@ -39,29 +40,55 @@ class TestBankingSwarm(unittest.TestCase):
             "swarm_history": [],
             "resolution_summary": None,
             "is_resolved": False,
+            "customer_verification_status": None,
+            "is_false_alarm": False,
         }
 
         app = build_banking_swarm_graph()
-        final_state = app.invoke(initial_state)
+        config = {"configurable": {"thread_id": "test-hitl-fraud"}}
 
-        self.assertTrue(final_state.get("is_resolved"))
-        self.assertEqual(final_state.get("active_agent"), "resolved")
-        self.assertIsNotNone(final_state.get("resolution_summary"))
+        # 1. Run until HITL interrupt
+        res1 = app.invoke(initial_state, config=config)
+        snap1 = app.get_state(config)
+        self.assertTrue(len(snap1.tasks) > 0)
+        self.assertTrue(len(snap1.tasks[0].interrupts) > 0)
 
-        history = final_state.get("swarm_history", [])
-        self.assertEqual(len(history), 5)
+        # 2. Resume with CONFIRM_FRAUD
+        res2 = app.invoke(Command(resume="CONFIRM_FRAUD"), config=config)
+        self.assertTrue(res2.get("is_resolved"))
+        self.assertEqual(res2.get("customer_verification_status"), "CONFIRMED_FRAUD")
+        self.assertFalse(res2.get("is_false_alarm"))
+        self.assertEqual(len(res2.get("swarm_history")), 5)
 
-        agents_in_order = [h["agent"] for h in history]
-        expected_order = [
-            "triage_agent",
-            "fraud_agent",
-            "credit_agent",
-            "compliance_agent",
-            "settlement_agent"
-        ]
-        self.assertEqual(agents_in_order, expected_order)
+    def test_swarm_hitl_branch_legitimate_travel(self):
+        """Verify HITL flow when customer verifies legitimate travel (false alarm)."""
+        initial_state: SwarmState = {
+            "messages": [],
+            "active_agent": "triage_agent",
+            "incident": self.incident,
+            "swarm_history": [],
+            "resolution_summary": None,
+            "is_resolved": False,
+            "customer_verification_status": None,
+            "is_false_alarm": False,
+        }
+
+        app = build_banking_swarm_graph()
+        config = {"configurable": {"thread_id": "test-hitl-legit"}}
+
+        # 1. Run until HITL interrupt
+        res1 = app.invoke(initial_state, config=config)
+        snap1 = app.get_state(config)
+        self.assertTrue(len(snap1.tasks) > 0)
+
+        # 2. Resume with LEGITIMATE
+        res2 = app.invoke(Command(resume="LEGITIMATE"), config=config)
+        self.assertTrue(res2.get("is_resolved"))
+        self.assertEqual(res2.get("customer_verification_status"), "LEGITIMATE_PURCHASE")
+        self.assertTrue(res2.get("is_false_alarm"))
+        # Only Triage -> Fraud (HITL) -> Triage (Closure) = 3 steps
+        self.assertEqual(len(res2.get("swarm_history")), 3)
 
 
 if __name__ == "__main__":
     unittest.main()
-
