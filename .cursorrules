@@ -1,0 +1,6 @@
+# VectorForce Agent Protocol (Cursor)
+
+This workspace uses VectorForce for architectural continuity and drift verification.
+- Check active tasks & drift: Use MCP tools 'list_tasks' & 'check_workspace_drift'
+- Retrieve briefing: Use MCP tool 'get_resume_briefing'
+- Save checkpoint: Use MCP tool 'save_checkpoint'

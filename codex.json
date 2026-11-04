@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "vectorforce": {
+      "type": "stdio",
+      "command": "/Users/omprakashprajapat/.nvm/versions/node/v22.23.2/bin/node",
+      "args": [
+        "/Users/omprakashprajapat/.nvm/versions/node/v22.23.2/lib/node_modules/vectorforce/bin/vf.js",
+        "mcp"
+      ],
+      "env": {
+        "VF_HARNESS": "codex"
+      }
+    }
+  }
+}

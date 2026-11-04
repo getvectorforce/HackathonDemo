@@ -1,0 +1,6 @@
+# VectorForce Agent Protocol (Windsurf Cascade)
+
+This workspace uses VectorForce for architectural continuity and drift verification.
+- Check tasks & drift: Call MCP tools 'list_tasks' and 'check_workspace_drift'
+- Resume briefing: Call MCP tool 'get_resume_briefing'
+- Save checkpoint: Call MCP tool 'save_checkpoint'
