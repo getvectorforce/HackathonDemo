@@ -1,0 +1,83 @@
+{
+  "schema_version": "vectorforce/handoff-bundle/v1",
+  "package_id": "hand-5bf888c9ab1e3765",
+  "created_at": "2026-11-04T20:49:30.622Z",
+  "manifest": {
+    "schema_version": "vectorforce/manifest/v1",
+    "package_id": "hand-5bf888c9ab1e3765",
+    "created_at": "2026-11-04T20:49:30.622Z",
+    "files": [
+      {
+        "path": "handoff.json",
+        "sha256": "4d9f95b9df36648f748163fdef91a9fbece7c926ae61517a109c5d86b2b9353a",
+        "size_bytes": 2739
+      }
+    ]
+  },
+  "handoff": {
+    "schema_version": "vectorforce/handoff/v1",
+    "package_id": "hand-5bf888c9ab1e3765",
+    "created_at": "2026-11-04T20:49:30.622Z",
+    "origin": {
+      "project_name": "HackathonDemo",
+      "task_id": "banking-swarm",
+      "task_title": "5-Agent Banking Swarm Demo",
+      "checkpoint_id": "9d186c7e-db0a-4a37-93e7-890171883258"
+    },
+    "disclosure": {
+      "recipient": "Rahul",
+      "destination_harness": "any"
+    },
+    "checkpoint": {
+      "summary": "Synced latest commit e60a946 with HITL and browser testing dashboard",
+      "claims": {
+        "goals": [
+          "Allow customer real-time confirmation/rejection of suspicious charges with dynamic swarm branching"
+        ],
+        "constraints": [
+          "LangGraph interrupt() and MemorySaver checkpointer"
+        ],
+        "decisions": [
+          {
+            "id": "DEC-HITL-01",
+            "title": "Real-time Verification Gate",
+            "rationale": "Pause at Fraud specialist with LangGraph interrupt"
+          },
+          {
+            "id": "DEC-HITL-02",
+            "title": "False Alarm Branching",
+            "rationale": "Customer-authorized travel keeps card active without fee or disruption"
+          },
+          {
+            "id": "DEC-UI-01",
+            "title": "Streamlit Browser Testing",
+            "rationale": "Interactive visual cards with live confirmation buttons"
+          }
+        ],
+        "next_steps": [
+          "Browser testing at http://localhost:8501"
+        ],
+        "open_questions": []
+      },
+      "evidence": {
+        "git": {
+          "commit_hash": "e60a946a8fb8f49456ebdd1af1bf34b6053c73c1",
+          "branch": "main",
+          "is_dirty": true,
+          "collected_at": "2026-11-04T20:42:32.469Z"
+        },
+        "documents": [
+          {
+            "path": "AGENTS.md",
+            "sha256": "80de3f8d4d67553f801225183a37d62c16716fe8a44d99b3d85eb928e37a6f6d",
+            "size_bytes": 711,
+            "collected_at": "2026-11-04T20:42:32.471Z",
+            "content": "# Agent Continuity Protocol — HackathonDemo\n\nThis repository uses **VectorForce** (\"Git for AI Context\") across Google Antigravity, Meta Muse, Claude Code, Command Code, OpenAI Codex, Cursor, Windsurf, GitHub Copilot, and Kiro IDE.\n\n## Workflow\n1. **Start/Resume Task**: Run `vf tasks active`, `vf drift --task <id>`, and `vf resume --task <id> --dest <harness>` (or MCP tools `list_tasks`, `check_workspace_drift`, `get_resume_briefing`, `reason_about_task`).\n2. **Save Checkpoint Before Switching IDE**: Run `vf checkpoint --task <id> --summary \"<summary>\" --goal \"<goal>\" --constraint \"<constraint>\" --decision \"<ID>:<Title>:<Rationale>\" --next \"<next>\" --doc \"AGENTS.md\"` (or MCP tool `save_checkpoint`).\n",
+            "untrusted_content": true
+          }
+        ],
+        "gaps": []
+      }
+    }
+  }
+}

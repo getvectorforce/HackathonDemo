@@ -195,3 +195,4 @@ if st.session_state.final_summary:
     st.success("✔ Swarm Consensus Finalized")
     st.markdown("### 📑 Final Incident Resolution Summary")
     st.code(st.session_state.final_summary, language="text")
+
